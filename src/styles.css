@@ -1,0 +1,11 @@
+/* src/styles.css */
+body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-image: url('/onepiece.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
