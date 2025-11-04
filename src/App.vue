@@ -1,10 +1,10 @@
 <template>
   <div>
-    <h1>One Piece Daily Challenge</h1>
+    <center> <h1>One Piece Daily Challenge</h1></center>
     <DailyGame />
   </div>
 </template>
 
 <script setup>
-import DailyGame from './components/DailyGame.vue';
+import DailyGame from './DailyGame.vue';
 </script>
