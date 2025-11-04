@@ -1,11 +1,90 @@
-/* src/styles.css */
 body {
     height: 100vh;
     margin: 0;
     padding: 0;
+    /* Assurez-vous que l'image 'onepiece.jpg' est bien dans le dossier 'public' */
     background-image: url('/onepiece.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
+}
+.vert {
+    background-color: #6AA84F; /* Vert */
+    color: white;
+}
+.rouge {
+    background-color: #F44336; /* Rouge */
+    color: white;
+}
+.jaune-up, .jaune-down {
+    background-color: #FFD966; /* Jaune */
+    color: #333;
+}
+.grid-row > div {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+.grid-row.header {
+    font-weight: bold;
+    background-color: #333;
+    color: white;
+}
+.grid-row {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+}
+.arrow {
+    margin-left: 5px;
+    font-weight: bold;
+}
+/* Votre style existant pour le reste */
+.daily-game {
+    background: #f7f7f7;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 900px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.input-area {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.input-area input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    flex-grow: 1;
+    max-width: 300px;
+}
+.input-area button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+.message-success {
+    color: #6AA84F;
+    font-weight: bold;
+    text-align: center;
+}
+.message-failure {
+    color: #F44336;
+    font-weight: bold;
+    text-align: center;
+}
+.attempts-count {
+    text-align: center;
+    font-size: 1.1em;
+    margin-bottom: 15px;
+}
+.loading-state {
+    text-align: center;
+    padding: 50px;
 }
