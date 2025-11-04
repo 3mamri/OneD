@@ -2,17 +2,29 @@
   <div v-if="!isLoading" class="daily-game">
 
     <h2 v-if="!isGameOver">Devine le Personnage de One Piece d'Aujourd'hui !</h2>
-    <h2 v-else :class="guesses.length < maxAttempts ? 'message-success' : 'message-failure'">{{ message }}</h2>
+    <h2 v-else class="message-success">{{ message }}</h2>
 
-    <p v-if="!isGameOver" class="attempts-count">Tentatives : {{ guesses.length }} / {{ maxAttempts }}</p>
+    <p v-if="!isGameOver" class="attempts-count">Tentatives : {{ guesses.length }}</p>
 
-    <div class="input-area" v-if="!isGameOver">
-      <input
-          v-model="userGuess"
-          placeholder="Entrez le nom du personnage"
-          @keyup.enter="checkGuess"
-      />
-      <button @click="checkGuess">Vérifier</button>
+    <div class="input-area-wrapper" v-if="!isGameOver">
+      <div class="input-area">
+        <input
+            v-model="userGuess"
+            placeholder="Entrez le nom du personnage"
+            @keyup.enter="checkGuess"
+        />
+        <button @click="checkGuess" :disabled="!userGuess">Vérifier</button>
+      </div>
+
+      <ul v-if="filteredCharacters.length > 0" class="autocomplete-list">
+        <li
+            v-for="char in filteredCharacters"
+            :key="char.name"
+            @click="selectCharacter(char)"
+        >
+          {{ char.name }}
+        </li>
+      </ul>
     </div>
 
     <p v-if="message && !isGameOver && !message.includes('incorrect')" class="message">{{ message }}</p>
@@ -25,7 +37,6 @@
         <div>Fruit du Démon</div>
         <div>Haki</div>
         <div>Dernière prime</div>
-        <div>Hauteur</div>
         <div>Origine</div>
         <div>Premier Arc</div>
       </div>
@@ -35,23 +46,31 @@
           :key="index"
           class="grid-row"
       >
-        <div :class="guess.clues.name">{{ guess.character.name }}</div>
-        <div :class="guess.clues.type">{{ guess.character.type }}</div>
-        <div :class="guess.clues.affiliation">{{ guess.character.affiliation }}</div>
-        <div :class="guess.clues.devil_fruit">{{ guess.character.devil_fruit || 'Aucun' }}</div>
-        <div :class="guess.clues.haki">{{ guess.character.haki || 'Aucun' }}</div>
+        <div class="character-image-cell">
+          <img
+              :src="guess.character.image || '/default-op-image.png'"
+              :alt="guess.character.name"
+              class="character-image"
+          />
+        </div>
+
+        <div :class="guess.clues.type"><div class="clue-content">{{ guess.display.type }}</div></div>
+        <div :class="guess.clues.affiliation"><div class="clue-content">{{ guess.display.affiliation }}</div></div>
+        <div :class="guess.clues.devil_fruit"><div class="clue-content">{{ guess.display.devil_fruit }}</div></div>
+        <div :class="guess.clues.haki"><div class="clue-content">{{ guess.display.haki }}</div></div>
+
         <div :class="guess.clues.bounty">
-          {{ formatBounty(guess.character.bounty) }}
-          <span v-if="guess.clues.bounty.includes('down')" class="arrow">↓</span>
-          <span v-if="guess.clues.bounty.includes('up')" class="arrow">↑</span>
+          <div class="clue-content">
+            {{ guess.display.bounty }}
+            <span class="direction-arrow">
+              <span v-if="guess.clues.bounty.includes('down')" class="arrow">↓</span>
+              <span v-if="guess.clues.bounty.includes('up')" class="arrow">↑</span>
+            </span>
+          </div>
         </div>
-        <div :class="guess.clues.height">
-          {{ formatHeight(guess.character.height) }}
-          <span v-if="guess.clues.height.includes('down')" class="arrow">↓</span>
-          <span v-if="guess.clues.height.includes('up')" class="arrow">↑</span>
-        </div>
-        <div :class="guess.clues.origin">{{ guess.character.origin }}</div>
-        <div :class="guess.clues.first_arc">{{ guess.character.first_arc }}</div>
+
+        <div :class="guess.clues.origin"><div class="clue-content">{{ guess.display.origin }}</div></div>
+        <div :class="guess.clues.first_arc"><div class="clue-content">{{ guess.display.first_arc }}</div></div>
       </div>
     </div>
   </div>
@@ -62,17 +81,19 @@
 </template>
 
 <script setup>
-import {ref, onMounted} from 'vue';
+import {ref, onMounted, watch} from 'vue';
 import {getCharacters, selectDailyChallenge} from '@/api/onePieceService.js';
+import './styles.css';
 
 const dailyCharacter = ref(null);
 const charactersList = ref([]);
 const userGuess = ref('');
 const message = ref('');
 const guesses = ref([]);
-const maxAttempts = 6;
 const isGameOver = ref(false);
-const isLoading = ref(true); // État de chargement
+const isLoading = ref(true);
+
+const filteredCharacters = ref([]);
 
 onMounted(async () => {
   try {
@@ -80,7 +101,7 @@ onMounted(async () => {
     dailyCharacter.value = selectDailyChallenge(charactersList.value);
 
     if (!dailyCharacter.value) {
-      message.value = 'Erreur : Aucun personnage n\'a pu être sélectionné. Liste filtrée vide.';
+      message.value = 'Erreur : Aucun personnage n\'a pu être sélectionné.';
       isGameOver.value = true;
     }
   } catch (error) {
@@ -88,11 +109,36 @@ onMounted(async () => {
     message.value = 'Erreur lors du chargement du défi. Vérifiez la console.';
     isGameOver.value = true;
   } finally {
-    isLoading.value = false; // FIN DU CHARGEMENT
+    isLoading.value = false;
   }
 });
 
-// Correction formatBounty pour M et Md
+watch(userGuess, (newGuess) => {
+  filterCharacters(newGuess);
+});
+
+function filterCharacters(input) {
+  if (input.length < 2) {
+    filteredCharacters.value = [];
+    return;
+  }
+
+  const lowerCaseInput = input.toLowerCase();
+
+  filteredCharacters.value = charactersList.value
+      .filter(char =>
+          !guesses.value.some(g => g.character.name === char.name) &&
+          char.name.toLowerCase().startsWith(lowerCaseInput)
+      )
+      .slice(0, 8);
+}
+
+function selectCharacter(character) {
+  userGuess.value = character.name;
+  filteredCharacters.value = [];
+  checkGuess();
+}
+
 function formatBounty(bounty) {
   if (bounty === null || bounty === 0) return 'Inconnu';
   const num = parseInt(bounty, 10);
@@ -106,21 +152,118 @@ function formatBounty(bounty) {
   return num.toLocaleString('fr-FR');
 }
 
-// CORRECTION: formatHeight doit retourner 'Inconnu' si null
-function formatHeight(height) {
-  return height ? `${height} cm` : 'Inconnu';
+// MODIFIÉ : Ajout de la logique de conversion en emojis et stockage dans 'display'
+function getClues(guessed, daily) {
+  const clues = {};
+  const display = {}; // NOUVEAU: Stocke le contenu à afficher (emojis, etc.)
+
+  const exactMatchProps = ['origin', 'first_arc'];
+  exactMatchProps.forEach(prop => {
+    const isMatch = guessed[prop] === daily[prop];
+    clues[prop] = isMatch ? 'vert' : 'rouge';
+    display[prop] = guessed[prop] || 'Inconnu';
+  });
+
+  // Genre (Emojis)
+  const guessedType = (guessed.type || '').toLowerCase();
+  const isTypeMatch = guessedType === (daily.type || '').toLowerCase();
+  clues.type = isTypeMatch ? 'vert' : 'rouge';
+  if (guessedType.includes('masculin')) {
+    display.type = '🧔';
+  } else if (guessedType.includes('feminin')) {
+    display.type = '👩';
+  } else {
+    display.type = guessed.type || '❓';
+  }
+
+  // LOGIQUE FRUIT DU DÉMON (Emojis)
+  const guessedDF = (guessed.devil_fruit || 'Aucun').toLowerCase();
+  const dailyDF = (daily.devil_fruit || 'Aucun').toLowerCase();
+  clues.devil_fruit = guessedDF === dailyDF ? 'vert' : 'rouge';
+
+  if (guessedDF === 'aucun') {
+    display.devil_fruit = '❌';
+  } else if (guessedDF.includes('paramecia')) {
+    display.devil_fruit = '🔵'; // Cercle bleu pour Paramecia
+  } else if (guessedDF.includes('zoan')) {
+    display.devil_fruit = '🟡'; // Cercle jaune pour Zoan
+  } else if (guessedDF.includes('logia')) {
+    display.devil_fruit = '🟢'; // Cercle vert pour Logia
+  } else {
+    display.devil_fruit = '✔️'; // Match sur un autre Fruit, ou nom précis
+  }
+
+  // LOGIQUE HAKI (Emojis)
+  const isHakiMatch = guessed.haki === daily.haki;
+  clues.haki = isHakiMatch ? 'vert' : 'rouge';
+  display.haki = guessed.haki === 'Oui' ? '👑' : '❌'; // Couronne pour Haki, X pour Non
+
+  // LOGIQUE AFFILIATION (Emojis)
+  const guessedAffiliation = (guessed.affiliation || '').toLowerCase();
+  const dailyAffiliation = (daily.affiliation || '').toLowerCase();
+
+  if (guessedAffiliation === dailyAffiliation) {
+    clues.affiliation = 'vert';
+    display.affiliation = '✔️';
+  } else if (
+      (guessedAffiliation.includes('chapeau de paille') && dailyAffiliation.includes('chapeau de paille')) ||
+      (guessedAffiliation.includes('corsaire') && dailyAffiliation.includes('corsaire')) ||
+      (guessedAffiliation.includes('marine') && dailyAffiliation.includes('marine')) ||
+      (guessedAffiliation.includes('amiral') && dailyAffiliation.includes('amiral')) ||
+      (guessedAffiliation.includes('yonko') && dailyAffiliation.includes('yonko')) ||
+      (guessedAffiliation.includes('empereur') && dailyAffiliation.includes('empereur')) ||
+      (guessedAffiliation.includes('révolutionnaire') && dailyAffiliation.includes('révolutionnaire'))
+  ) {
+    clues.affiliation = 'jaune-affiliation';
+    display.affiliation = '⚠️';
+  } else {
+    clues.affiliation = 'rouge';
+    display.affiliation = '❌';
+  }
+
+  const numericalProps = ['bounty'];
+  numericalProps.forEach(prop => {
+    const guessedValue = guessed[prop];
+    const dailyValue = daily[prop];
+    const formattedBounty = formatBounty(guessedValue);
+
+    if (guessedValue === dailyValue) {
+      clues[prop] = 'vert';
+      display[prop] = formattedBounty;
+    }
+    else if (guessedValue !== null && dailyValue !== null && guessedValue !== undefined && dailyValue !== undefined) {
+      clues[prop] = (guessedValue < dailyValue) ? 'jaune-up' : 'jaune-down';
+      display[prop] = formattedBounty;
+    }
+    else {
+      clues[prop] = 'rouge';
+      display[prop] = formattedBounty;
+    }
+  });
+
+  clues.name = 'name-cell';
+  // RETOURNE L'OBJET 'display' pour l'affichage
+  return { clues, display };
 }
 
 function checkGuess() {
-  if (isGameOver.value || guesses.value.length >= maxAttempts) return;
+  if (isGameOver.value) return;
 
   const guessName = userGuess.value.trim();
   if (!guessName) return;
 
-  const guessedCharacter = charactersList.value.find(char =>
-      char.name.toLowerCase().includes(guessName.toLowerCase()) ||
-      guessName.toLowerCase().includes(char.name.toLowerCase())
+  let guessedCharacter = null;
+
+  guessedCharacter = charactersList.value.find(char =>
+      char.name.toLowerCase() === guessName.toLowerCase()
   );
+
+  if (!guessedCharacter) {
+    guessedCharacter = charactersList.value.find(char =>
+        char.name.toLowerCase().includes(guessName.toLowerCase()) ||
+        guessName.toLowerCase().includes(char.name.toLowerCase())
+    );
+  }
 
   if (!guessedCharacter) {
     message.value = `Personnage "${guessName}" non trouvé dans la base.`;
@@ -128,63 +271,29 @@ function checkGuess() {
     return;
   }
 
-  const clues = getClues(guessedCharacter, dailyCharacter.value);
+  if (guesses.value.some(g => g.character.name === guessedCharacter.name)) {
+    message.value = `Vous avez déjà deviné ${guessedCharacter.name}.`;
+    userGuess.value = '';
+    return;
+  }
+
+  // MODIFIÉ : Récupère les deux objets
+  const { clues, display } = getClues(guessedCharacter, dailyCharacter.value);
   guesses.value.push({
     character: guessedCharacter,
-    clues: clues
+    clues: clues,
+    display: display // AJOUTÉ: L'objet display est stocké ici
   });
 
   userGuess.value = '';
+  filteredCharacters.value = [];
 
   if (guessedCharacter.name.toLowerCase() === dailyCharacter.value.name.toLowerCase()) {
-    message.value = `VICTOIRE ! Vous avez deviné le bon personnage : ${dailyCharacter.value.name} !`;
+    message.value = `VICTOIRE ! Vous avez deviné le bon personnage : ${dailyCharacter.value.name} en ${guesses.value.length} tentatives !`;
     isGameOver.value = true;
     return;
   }
 
-  if (guesses.value.length >= maxAttempts) {
-    message.value = `PERDU ! Le personnage mystère était : ${dailyCharacter.value.name}.`;
-    isGameOver.value = true;
-  } else {
-    message.value = `Personnage incorrect. Tentatives restantes : ${maxAttempts - guesses.value.length}.`;
-  }
-}
-
-// CORRECTION MAJEURE: Logique pour les indices (inclus la gestion du 'type' qui était le bug d'affichage)
-function getClues(guessed, daily) {
-  const clues = {};
-
-  // NOTE: Si la clé est 'genre' dans votre JSON, remplacez 'type' par 'genre' ci-dessous
-  const exactMatchProps = ['type', 'affiliation', 'devil_fruit', 'haki', 'origin', 'first_arc'];
-  exactMatchProps.forEach(prop => {
-    // Si la propriété n'existe pas ou est null sur l'un des objets, comparez-les.
-    // La comparaison doit se faire sur les valeurs brutes.
-    clues[prop] = guessed[prop] === daily[prop] ? 'vert' : 'rouge';
-  });
-
-  // Gestion de la PRIME (Bounty) et Hauteur (Height)
-  const numericalProps = ['bounty', 'height'];
-  numericalProps.forEach(prop => {
-    const guessedValue = guessed[prop];
-    const dailyValue = daily[prop];
-
-    // CAS 1: Correspondance exacte (y compris null/null ou 0/0)
-    if (guessedValue === dailyValue) {
-      clues[prop] = 'vert';
-    }
-    // CAS 2: Comparaison numérique (Jaune avec flèche) - UNIQUEMENT si les deux sont des nombres valides
-    else if (guessedValue !== null && dailyValue !== null && guessedValue !== undefined && dailyValue !== undefined) {
-      // Nous utilisons la logique jaune-up/jaune-down uniquement si les deux sont des nombres
-      clues[prop] = (guessedValue < dailyValue) ? 'jaune-up' : 'jaune-down';
-    }
-    // CAS 3: Différence de statut (Rouge) - L'un est connu, l'autre est Inconnu (null/undefined)
-    else {
-      clues[prop] = 'rouge';
-    }
-  });
-
-  clues.name = 'name-cell';
-
-  return clues;
+  message.value = `Personnage incorrect. Continuez d'essayer.`;
 }
 </script>
