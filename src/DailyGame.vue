@@ -152,10 +152,9 @@ function formatBounty(bounty) {
   return num.toLocaleString('fr-FR');
 }
 
-// MODIFIÉ : Ajout de la logique de conversion en emojis et stockage dans 'display'
 function getClues(guessed, daily) {
   const clues = {};
-  const display = {}; // NOUVEAU: Stocke le contenu à afficher (emojis, etc.)
+  const display = {};
 
   const exactMatchProps = ['origin', 'first_arc'];
   exactMatchProps.forEach(prop => {
@@ -164,7 +163,6 @@ function getClues(guessed, daily) {
     display[prop] = guessed[prop] || 'Inconnu';
   });
 
-  // Genre (Emojis)
   const guessedType = (guessed.type || '').toLowerCase();
   const isTypeMatch = guessedType === (daily.type || '').toLowerCase();
   clues.type = isTypeMatch ? 'vert' : 'rouge';
@@ -176,7 +174,6 @@ function getClues(guessed, daily) {
     display.type = guessed.type || '❓';
   }
 
-  // LOGIQUE FRUIT DU DÉMON (Emojis)
   const guessedDF = (guessed.devil_fruit || 'Aucun').toLowerCase();
   const dailyDF = (daily.devil_fruit || 'Aucun').toLowerCase();
   clues.devil_fruit = guessedDF === dailyDF ? 'vert' : 'rouge';
@@ -184,21 +181,20 @@ function getClues(guessed, daily) {
   if (guessedDF === 'aucun') {
     display.devil_fruit = '❌';
   } else if (guessedDF.includes('paramecia')) {
-    display.devil_fruit = '🔵'; // Cercle bleu pour Paramecia
+    display.devil_fruit = '🔵';
   } else if (guessedDF.includes('zoan')) {
-    display.devil_fruit = '🟡'; // Cercle jaune pour Zoan
+    display.devil_fruit = '🟡';
   } else if (guessedDF.includes('logia')) {
-    display.devil_fruit = '🟢'; // Cercle vert pour Logia
+    display.devil_fruit = '🟢';
   } else {
-    display.devil_fruit = '✔️'; // Match sur un autre Fruit, ou nom précis
+    display.devil_fruit = '✔️';
   }
 
-  // LOGIQUE HAKI (Emojis)
+
   const isHakiMatch = guessed.haki === daily.haki;
   clues.haki = isHakiMatch ? 'vert' : 'rouge';
-  display.haki = guessed.haki === 'Oui' ? '👑' : '❌'; // Couronne pour Haki, X pour Non
+  display.haki = guessed.haki === 'Oui' ? '👑' : '❌';
 
-  // LOGIQUE AFFILIATION (Emojis)
   const guessedAffiliation = (guessed.affiliation || '').toLowerCase();
   const dailyAffiliation = (daily.affiliation || '').toLowerCase();
 
@@ -242,7 +238,6 @@ function getClues(guessed, daily) {
   });
 
   clues.name = 'name-cell';
-  // RETOURNE L'OBJET 'display' pour l'affichage
   return { clues, display };
 }
 
@@ -277,12 +272,11 @@ function checkGuess() {
     return;
   }
 
-  // MODIFIÉ : Récupère les deux objets
   const { clues, display } = getClues(guessedCharacter, dailyCharacter.value);
   guesses.value.push({
     character: guessedCharacter,
     clues: clues,
-    display: display // AJOUTÉ: L'objet display est stocké ici
+    display: display
   });
 
   userGuess.value = '';
