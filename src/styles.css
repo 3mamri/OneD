@@ -2,23 +2,22 @@ body {
     height: 100vh;
     margin: 0;
     padding: 0;
-    /* Assurez-vous que l'image 'onepiece.jpg' est bien dans le dossier 'public' */
-    background-image: url('/onepiece.jpg');
+    background-image: url('public/onepiece.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
 }
 .vert {
-    background-color: #6AA84F; /* Vert */
+    background-color: #6AA84F;
     color: white;
 }
 .rouge {
-    background-color: #F44336; /* Rouge */
+    background-color: #F44336;
     color: white;
 }
 .jaune-up, .jaune-down {
-    background-color: #FFD966; /* Jaune */
+    background-color: #FFD966;
     color: #333;
 }
 .grid-row > div {
@@ -33,14 +32,12 @@ body {
 }
 .grid-row {
     display: grid;
-    /* MODIFIÉ : 8 colonnes après la suppression de la Hauteur */
     grid-template-columns: repeat(8, 1fr);
 }
 .arrow {
     margin-left: 5px;
     font-weight: bold;
 }
-/* Votre style existant pour le reste */
 .daily-game {
     background: #f7f7f7;
     padding: 20px;
@@ -90,7 +87,6 @@ body {
     padding: 50px;
 }
 
-/* Amélioration de la flèche de direction (Règles robustes) */
 .grid-row > div .arrow {
     margin-left: 5px;
     font-weight: bold;
@@ -108,50 +104,45 @@ body {
     color: #cc9900 !important;
 }
 
-/* Styles pour l'Affiliation (Jaune intermédiaire) */
 .jaune-affiliation {
-    background-color: #FFD966; /* Utilise le jaune standard */
+    background-color: #FFD966;
     color: #333;
 }
-/* --- Nouveaux Styles de Grille et Couleurs (Inspirés de l'image) --- */
 
-/* Ajuster le conteneur principal */
+
+
 .daily-game {
-    /* Maintenez vos styles existants pour le .daily-game wrapper */
 }
 
-/* Couleurs de base (Maintenues pour la compatibilité, mais Vert/Rouge/Jaune sont désormais utilisés comme arrière-plan) */
-.vert { background-color: #6AA84F; color: white; border: 1px solid #486E37; } /* Vert foncé pour la victoire */
-.rouge { background-color: #F44336; color: white; border: 1px solid #C4342A; } /* Rouge vif pour l'échec */
+.vert { background-color: #6AA84F; color: white; border: 1px solid #486E37; }
+.rouge { background-color: #F44336; color: white; border: 1px solid #C4342A; }
 .jaune-up, .jaune-down, .jaune-affiliation {
     background-color: #FFD966;
     color: #333;
     border: 1px solid #C7A74E;
-} /* Jaune standard */
 
-/* Style pour la rangée */
+
+
 .grid-row {
     display: grid;
-    /* 8 colonnes, comme défini précédemment */
-    grid-template-columns: 0.8fr repeat(7, 1fr); /* La 1ère colonne (Personnage/Image) est légèrement plus petite */
-    gap: 2px; /* Espacement entre les cellules */
+    grid-template-columns: 0.8fr repeat(7, 1fr);
+    gap: 2px;
     margin-bottom: 2px;
 }
 
-/* Style de l'en-tête (Plus plat, fond sombre) */
+
 .grid-row.header {
     font-weight: bold;
     background-color: #333;
     color: white;
     text-align: center;
-    border-radius: 4px 4px 0 0; /* Coins arrondis en haut */
+    border-radius: 4px 4px 0 0;
 }
 .grid-row.header > div {
-    padding: 10px 5px;
-    border: none; /* Supprimer la bordure interne */
+    padding: 10px 5px;/* Supprimer la bordure interne */
 }
 
-/* Style général des cellules (Centré verticalement et horizontalement) */
+
 .grid-row > div {
     padding: 8px 5px;
     text-align: center;
@@ -159,40 +150,37 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 50px; /* Hauteur minimale pour les images */
+    min-height: 50px;
     font-weight: bold;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Petite ombre pour l'effet "carte" */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
 }
 
-/* --- Styles pour les images de personnages --- */
 
 .character-image-cell {
-    padding: 0; /* Pas de padding pour l'image */
-    background: transparent !important; /* Rendre le fond transparent pour la cellule image */
+    padding: 0;
+    background: transparent !important;
     border: none !important;
     box-shadow: none !important;
 }
 
 .character-image {
-    width: 100%; /* Remplir la cellule */
-    max-width: 60px; /* Limiter la taille de l'image */
+    width: 100%;
+    max-width: 60px;
     height: auto;
     border-radius: 4px;
     object-fit: cover;
 }
 
-/* Styles pour les indices (emojis/texte) */
 .clue-content {
     font-size: 1.1em;
 }
 
-/* Mise en forme des flèches pour les rendre plus lisibles (si elles n'ont pas fonctionné avant) */
 .direction-arrow .arrow {
-    font-size: 1.5em !important; /* Plus grand */
+    font-size: 1.5em !important;
     font-weight: 900 !important;
 }
 .jaune-up .direction-arrow .arrow,
 .jaune-down .direction-arrow .arrow {
-    color: #333 !important; /* Noir/gris foncé pour le contraste sur jaune */
-}
+    color: #333 !important;
+}}
