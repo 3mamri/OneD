@@ -184,3 +184,172 @@ body {
 .jaune-down .direction-arrow .arrow {
     color: #333 !important;
 }}
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centre horizontalement */
+    justify-content: center;
+    width: 100%;
+}
+/* Conteneur principal du tableau */
+.clues-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    align-items: center; /* Centre le tableau horizontalement */
+    width: 100%;
+}
+
+/* Style de chaque ligne (Header et Tentatives) */
+.grid-row {
+    display: grid;
+    /* On définit 8 colonnes de 85px de large chacune */
+    grid-template-columns: repeat(8, 85px);
+    gap: 8px;
+    align-items: center;
+}
+
+/* Style commun à toutes les cases (carrés) */
+.grid-row > div {
+    width: 85px;
+    height: 85px; /* On force le carré */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: white;
+    overflow: hidden; /* Empêche le texte de dépasser */
+    word-break: break-word;
+    padding: 2px;
+}
+
+/* Cellule spécifique pour l'image du personnage */
+.character-image-cell {
+    background-color: #f0f0f0;
+    color: #333 !important;
+    position: relative;
+}
+
+.character-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* L'image remplit le carré sans se déformer */
+}
+
+/* Affichage du nom par-dessus l'image ou en dessous */
+.character-name-label {
+    position: absolute;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    width: 100%;
+    font-size: 0.6rem;
+    padding: 2px 0;
+}
+
+/* Couleurs des indices */
+.vert { background-color: #28a745; }
+.rouge { background-color: #dc3545; }
+.jaune-up, .jaune-down, .jaune-affiliation {
+    background-color: #ffc107;
+    color: #333 !important;
+}
+
+/* Style pour les en-têtes (texte noir, pas de fond coloré) */
+.grid-row.header > div {
+    height: auto;
+    background: transparent;
+    color: #333;
+    font-size: 0.7rem;
+}
+/* Supprime le conteneur blanc et centre tout */
+.daily-game {
+    background: transparent; /* Supprime le fond blanc */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: 80vh;
+    padding: 20px;
+}
+
+/* Titres des colonnes (Personnage, Genre, etc.) */
+.grid-row.header {
+    margin-bottom: 5px;
+    background: transparent;
+}
+
+.grid-row.header > div {
+    background: rgba(0, 0, 0, 0.7); /* Fond noir transparent pour les titres */
+    color: white;
+    height: 35px; /* Moins haut que les cases de jeu */
+    font-size: 0.75rem;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Les rangées de tentatives */
+.grid-row {
+    display: grid;
+    /* On définit 8 colonnes de 90px */
+    grid-template-columns: repeat(8, 90px);
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+/* Les cases de jeu (Carrés) */
+.grid-row > div {
+    width: 90px;
+    height: 90px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Petite ombre pour décoller du fond */
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Image du personnage */
+.character-image-cell {
+    background: #fff;
+    padding: 0 !important;
+    position: relative;
+    border: 2px solid white !important;
+}
+
+.character-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.character-name-label {
+    position: absolute;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    width: 100%;
+    font-size: 0.65rem;
+    padding: 2px 0;
+}
+
+/* Couleurs des indices */
+.vert { background-color: #28a745; }
+.rouge { background-color: #dc3545; }
+.jaune-up, .jaune-down, .jaune-affiliation {
+    background-color: #ffc107;
+    color: #212529 !important;
+}

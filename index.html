@@ -7,6 +7,21 @@
     <title>One Piece Daily Challenge</title>
 </head>
 <body>
+<div class="clues-grid">
+    <div class="grid-row header">
+        <div>Personnage</div>
+        <div>Genre</div>
+        <div>Affiliation</div>
+        <div>Fruit</div>
+        <div>Haki</div>
+        <div>Bounty</div>
+        <div>Origine</div>
+        <div>Arc</div>
+    </div>
+
+    <div v-for="(guess, index) in guesses" :key="index" class="grid-row">
+    </div>
+</div>
 <div id="app"></div>
 
 <script type="module" src="/src/main.js"></script>

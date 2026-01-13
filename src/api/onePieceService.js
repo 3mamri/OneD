@@ -1,87 +1,87 @@
-// src/api/onePieceService.js
-
 import axios from 'axios';
 
-const API_ENDPOINT = 'https://api.api-onepiece.com/v2/characters/fr';
-
-const MAIN_AFFILIATIONS = [
-    'Équipage du Chapeau de Paille',
-    'Révolutionnaires',
-    'Amiraux',
-    'Quatre Empereurs',
-    '7 Capitaines Corsaires',
-    'Marine',
-    'Supernovas',
-    'Gouvernement Mondial',
-    'Ancien équipage des Roger',
-];
+const API_BASE_URL = 'https://api.api-onepiece.com/v2';
 
 export async function getCharacters() {
     try {
-        const response = await axios.get(API_ENDPOINT);
+        const response = await axios.get(`${API_BASE_URL}/characters/fr`);
         const characters = response.data;
 
-        // Filtrage pour ne conserver que les personnages pertinents
-        const filteredCharacters = characters.filter(char =>  {
-            const bountyNum = parseInt(char.bounty) || 0;
-            const affiliationNormalized = (char.affiliation || char.status || '').trim();
+        return characters
+            .filter(char => {
+                const name = char.name || "";
+                // On garde si le personnage a une image ET une affiliation (ça élimine 80% des inconnus)
+                // OU s'il a une prime (même de 0, car les figurants n'ont souvent pas de champ bounty du tout)
+                const hasVisual = char.picture && char.picture.length > 10;
+                const hasTeam = char.affiliation && char.affiliation !== "Inconnu";
+                const hasBounty = char.bounty !== undefined && char.bounty !== null;
 
-            const isMainBounty = bountyNum >= 30000000;
-            const isMainAffiliation = MAIN_AFFILIATIONS.some(aff =>
-                affiliationNormalized.includes(aff)
-            );
-            const isHighRank = affiliationNormalized.includes('Amiral') ||
-                affiliationNormalized.includes('Vice-Amiral') ||
-                affiliationNormalized.includes('Chef d\'état-major') ||
-                affiliationNormalized.includes('CP');
-            const keyNames = ['Luffy', 'Zoro', 'Nami', 'Usopp', 'Sanji', 'Chopper', 'Robin', 'Franky', 'Brook', 'Jinbe', 'Shanks', 'Barbe Blanche', 'Kaido', 'Big Mom', 'Barbe Noire', 'Garp', 'Smoker', 'Sengoku', 'Dragon', 'Crocus'];
-            const isKeyCharacter = keyNames.some(name => char.name.includes(name));
-
-            return isMainBounty || isMainAffiliation || isHighRank || isKeyCharacter;
-        });
-
-        // Formatage et standardisation des données (Hauteur/height est exclu ici)
-        return filteredCharacters.map(char => {
-            const bountyValue = parseInt(char.bounty) || null;
-
-            return {
-                name: char.name.trim(),
-                image: char.picture || char.image_url || null, // Assurez-vous d'avoir 'picture' ou 'image_url' dans votre API
-                type: char.gender || char.type || 'Inconnu',
-                affiliation: char.affiliation || char.status || 'Inconnu',
-                devil_fruit: char.devilFruit || char.devil_fruit || 'Aucun',
-                haki: (char.haki && char.haki !== 'Non') ? 'Oui' : 'Non',
-                bounty: bountyValue,
-                origin: char.origin || 'Inconnu',
-                first_arc: char.firstArc || char.first_arc || 'Inconnu',
-            };
-        });
-
-    } catch (error) {
-        console.error("Erreur lors de la récupération des personnages :", error);
-        throw error;
+                return (hasVisual && hasTeam) || hasBounty;
+            })
+            .map(char => {
+                const fullName = char.name.trim();
+                return {
+                    id: char.id,
+                    name: fullName,
+                    // Système de recherche amélioré pour trouver "Garp" dans "Monkey D. Garp"
+                    searchNames: [
+                        fullName.toLowerCase(),
+                        ...fullName.toLowerCase().split(/[\s,.'-]+/)
+                    ],
+                    image: char.picture || '/iconeonepiece.ico',
+                    bounty: parseInt(char.bounty) || 0,
+                    type: 'Inconnu',
+                    origin: 'Inconnu',
+                    first_arc: 'Inconnu',
+                    affiliation: 'Inconnu'
+                };
+            });
+    } catch (e) {
+        console.error("Erreur liste personnages:", e);
+        return [];
     }
 }
+export async function getCharacterDetails(id) {
+    try {
+        const res = await axios.get(`${API_BASE_URL}/characters/fr/${id}`);
+        const data = res.data;
+        const attr = data.french_attribute || {};
 
-// Fonction utilitaire pour générer un nombre pseudo-aléatoire reproductible
-function seededRandom(seed) {
-    const x = Math.sin(seed) * 10000;
-    return x - Math.floor(x);
-}
-
-/**
- * Sélectionne le personnage du jour de manière stable basée sur la date.
- */
-export function selectDailyChallenge(characters) {
-    if (!characters || characters.length === 0) {
+        // On récupère les vraies infos de l'arc et du genre
+        return {
+            type: attr.gender || data.gender || 'Masculin',
+            affiliation: attr.affiliation || data.affiliation || 'Pirate',
+            devil_fruit: attr.fruit_type || data.devil_fruit || 'Aucun',
+            origin: attr.origin || data.origin || 'Inconnu',
+            first_arc: attr.first_arc || data.first_arc || 'Romance Dawn'
+        };
+    } catch (e) {
         return null;
     }
+}
 
-    const today = new Date();
-    // Crée une graine basée sur l'année, le mois et le jour actuels
-    const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+export async function getHakiCount(id) {
+    try {
+        const res = await axios.get(`${API_BASE_URL}/hakis/fr/character/${id}/count`);
+        return res.data.count ?? res.data ?? 0;
+    } catch (e) {
+        return 0;
+    }
+}
 
-    const randomIndex = Math.floor(seededRandom(seed) * characters.length);
+export async function getArcs() {
+    try {
+        const res = await axios.get(`${API_BASE_URL}/arcs/fr`);
+        // On récupère l'ordre exact des arcs pour les flèches
+        return res.data.map(arc => arc.french_attribute?.name || arc.name);
+    } catch (e) {
+        return [];
+    }
+}
 
-    return characters[randomIndex];
+export function selectDailyChallenge(chars) {
+    if (!chars.length) return null;
+    const seed = new Date().getFullYear() * 10000 + (new Date().getMonth() + 1) * 100 + new Date().getDate();
+    const randomIndex = Math.floor((Math.abs(Math.sin(seed))) * chars.length);
+    return chars[randomIndex];
 }
