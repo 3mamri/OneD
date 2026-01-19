@@ -130,7 +130,7 @@ function getClues(guessed, daily) {
     } else if (prop === 'devil_fruit') {
       display[prop] = guessed[prop] === 'Aucun' ? '❌' : '🔵';
     } else if (prop === 'type') {
-      display[prop] = String(guessed[prop]).includes('Féminin') ? '👩' : '🧔';
+      display[prop] = String(guessed[prop]).includes('Féminin') ? 'Féminin' : 'Masculin';
     } else if (prop === 'first_arc') {
       const gIndex = arcsOrder.value.indexOf(guessed.first_arc);
       const dIndex = arcsOrder.value.indexOf(daily.first_arc);
