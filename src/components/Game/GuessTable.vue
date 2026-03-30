@@ -1,79 +1,113 @@
+<script setup>
+defineProps({
+  guesses: {
+    type: Array,
+    default: () => []
+  }
+});
+
+function getStateClass(state) {
+  return `tile ${state || 'rouge'}`;
+}
+</script>
+
 <template>
-  <div v-if="guesses.length > 0" class="clues-grid">
-    <div class="grid-row header">
+  <div class="guess-table-wrapper">
+    <div class="table-header">
       <div>Personnage</div>
       <div>Genre</div>
       <div>Affiliation</div>
-      <div>Fruit du Démon</div>
+      <div>Fruit du démon</div>
       <div>Haki</div>
-      <div>Dernière prime</div>
+      <div>Prime</div>
       <div>Origine</div>
-      <div>Premier Arc</div>
+      <div>Premier arc</div>
     </div>
 
     <div
-        v-for="(guess, index) in guesses"
-        :key="index"
-        class="grid-row"
+        v-for="(entry, rowIndex) in guesses"
+        :key="`${entry.character.id}-${rowIndex}`"
+        class="table-row"
     >
-      <div class="character-image-cell">
-        <img
-            :src="guess.character.image "
-            :alt="guess.character.name"
-            class="character-image"
-            @error="handleImageError"
-        />
-        <div class="character-name-label">{{ guess.character.name }}</div>
-      </div>
-
-      <div :class="guess.clues.type">
-        <div class="clue-content">{{ guess.display.type }}</div>
-      </div>
-
-      <div :class="guess.clues.affiliation">
-        <div class="clue-content">{{ guess.display.affiliation }}</div>
-      </div>
-
-      <div :class="guess.clues.devil_fruit">
-        <div class="clue-content">{{ guess.display.devil_fruit }}</div>
-      </div>
-
-      <div :class="guess.clues.haki">
-        <div class="clue-content">{{ guess.display.haki }}</div>
-      </div>
-
-      <div :class="guess.clues.bounty">
-        <div class="clue-content">
-          {{ guess.display.bounty }}
-          <span class="direction-arrow">
-            <span v-if="guess.clues.bounty.includes('up')" class="arrow">↑</span>
-            <span v-if="guess.clues.bounty.includes('down')" class="arrow">↓</span>
-          </span>
+      <div
+          class="flip-card"
+          :style="{ animationDelay: `${rowIndex * 100 + 0}ms` }"
+      >
+        <div class="tile neutral">
+          <span class="tile-title">Personnage</span>
+          <span class="tile-value">{{ entry.character.name }}</span>
         </div>
       </div>
 
-      <div :class="guess.clues.origin">
-        <div class="clue-content">{{ guess.display.origin }}</div>
+      <div
+          class="flip-card"
+          :style="{ animationDelay: `${rowIndex * 100 + 100}ms` }"
+      >
+        <div :class="getStateClass(entry.clues.type)">
+          <span class="tile-title">Genre</span>
+          <span class="tile-value">{{ entry.display.type }}</span>
+        </div>
       </div>
 
-      <div :class="guess.clues.first_arc">
-        <div class="clue-content">{{ guess.display.first_arc }}</div>
+      <div
+          class="flip-card"
+          :style="{ animationDelay: `${rowIndex * 100 + 200}ms` }"
+      >
+        <div :class="getStateClass(entry.clues.affiliation)">
+          <span class="tile-title">Affiliation</span>
+          <span class="tile-value">{{ entry.display.affiliation }}</span>
+        </div>
+      </div>
+
+      <div
+          class="flip-card"
+          :style="{ animationDelay: `${rowIndex * 100 + 300}ms` }"
+      >
+        <div :class="getStateClass(entry.clues.devil_fruit)">
+          <span class="tile-title">Fruit</span>
+          <span class="tile-value">{{ entry.display.devil_fruit }}</span>
+        </div>
+      </div>
+
+      <div
+          class="flip-card"
+          :style="{ animationDelay: `${rowIndex * 100 + 400}ms` }"
+      >
+        <div :class="getStateClass(entry.clues.haki)">
+          <span class="tile-title">Haki</span>
+          <span class="tile-value">{{ entry.display.haki }}</span>
+        </div>
+      </div>
+
+      <div
+          class="flip-card"
+          :style="{ animationDelay: `${rowIndex * 100 + 500}ms` }"
+      >
+        <div :class="getStateClass(entry.clues.bounty)">
+          <span class="tile-title">Prime</span>
+          <span class="tile-value">{{ entry.display.bounty }}</span>
+        </div>
+      </div>
+
+      <div
+          class="flip-card"
+          :style="{ animationDelay: `${rowIndex * 100 + 600}ms` }"
+      >
+        <div :class="getStateClass(entry.clues.origin)">
+          <span class="tile-title">Origine</span>
+          <span class="tile-value">{{ entry.display.origin }}</span>
+        </div>
+      </div>
+
+      <div
+          class="flip-card"
+          :style="{ animationDelay: `${rowIndex * 100 + 700}ms` }"
+      >
+        <div :class="getStateClass(entry.clues.first_arc)">
+          <span class="tile-title">Premier arc</span>
+          <span class="tile-value">{{ entry.display.first_arc }}</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
-
-<script setup>
-// Récupération des tentatives depuis le parent (DailyGame)
-defineProps({
-  guesses: {
-    type: Array,
-    required: true
-  }
-});
-
-// Gestion des images API cassées
-function handleImageError(event) {
-  event.target.src = '/iconeonepiece.ico';
-}
-</script>

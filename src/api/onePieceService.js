@@ -1,87 +1,91 @@
-import axios from 'axios';
+import { characters } from "../data/characters";
 
-const API_BASE_URL = 'https://api.api-onepiece.com/v2';
-
-export async function getCharacters() {
-    try {
-        const response = await axios.get(`${API_BASE_URL}/characters/fr`);
-        const characters = response.data;
-
-        return characters
-            .filter(char => {
-                const name = char.name || "";
-                // On garde si le personnage a une image ET une affiliation (ça élimine 80% des inconnus)
-                // OU s'il a une prime (même de 0, car les figurants n'ont souvent pas de champ bounty du tout)
-                const hasVisual = char.picture && char.picture.length > 10;
-                const hasTeam = char.affiliation && char.affiliation !== "Inconnu";
-                const hasBounty = char.bounty !== undefined && char.bounty !== null;
-
-                return (hasVisual && hasTeam) || hasBounty;
-            })
-            .map(char => {
-                const fullName = char.name.trim();
-                return {
-                    id: char.id,
-                    name: fullName,
-                    // Système de recherche amélioré pour trouver "Garp" dans "Monkey D. Garp"
-                    searchNames: [
-                        fullName.toLowerCase(),
-                        ...fullName.toLowerCase().split(/[\s,.'-]+/)
-                    ],
-                    image: char.picture || '/iconeonepiece.ico',
-                    bounty: parseInt(char.bounty) || 0,
-                    type: 'Inconnu',
-                    origin: 'Inconnu',
-                    first_arc: 'Inconnu',
-                    affiliation: 'Inconnu'
-                };
-            });
-    } catch (e) {
-        console.error("Erreur liste personnages:", e);
-        return [];
-    }
+export function getCharacters() {
+    return characters;
 }
-export async function getCharacterDetails(id) {
-    try {
-        const res = await axios.get(`${API_BASE_URL}/characters/fr/${id}`);
-        const data = res.data;
-        const attr = data.french_attribute || {};
 
-        // On récupère les vraies infos de l'arc et du genre
-        return {
-            type: attr.gender || data.gender || 'Masculin',
-            affiliation: attr.affiliation || data.affiliation || 'Pirate',
-            devil_fruit: attr.fruit_type || data.devil_fruit || 'Aucun',
-            origin: attr.origin || data.origin || 'Inconnu',
-            first_arc: attr.first_arc || data.first_arc || 'Romance Dawn'
-        };
-    } catch (e) {
-        return null;
+export function searchCharacters(query, excludedIds = []) {
+    const normalized = query.trim().toLowerCase();
+
+    if (normalized.length < 2) return [];
+
+    return characters
+        .filter((character) => {
+            const notExcluded = !excludedIds.includes(character.id);
+            const matches =
+                character.name.toLowerCase().includes(normalized) ||
+                (character.searchNames || []).some((name) =>
+                    name.toLowerCase().includes(normalized)
+                );
+            return notExcluded && matches;
+        })
+        .slice(0, 8);
+}
+
+export function selectDailyChallenge(list) {
+    if (!list || !list.length) return null;
+
+    const today = new Date();
+    const seed = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++) {
+        hash += seed.charCodeAt(i);
     }
+
+    return list[hash % list.length];
+}
+
+export async function getCharacterDetails(id) {
+    const char = characters.find((c) => c.id === id);
+
+    if (!char) {
+        return {
+            type: "Inconnu",
+            devil_fruit: "Aucun",
+            origin: "Inconnu",
+            first_arc: "Inconnu",
+            affiliation: "Inconnu",
+            bounty: 0,
+            image: ""
+        };
+    }
+
+    return {
+        type: char.gender || char.type || "Inconnu",
+        devil_fruit:
+            char.devil_fruit ||
+            char.devilFruit?.name ||
+            char.fruitType ||
+            "Aucun",
+        origin: char.origin || "Inconnu",
+        first_arc: char.first_arc || char.firstArc || "Inconnu",
+        affiliation: char.affiliation || "Inconnu",
+        bounty: char.bounty || 0,
+        image: char.image || ""
+    };
 }
 
 export async function getHakiCount(id) {
-    try {
-        const res = await axios.get(`${API_BASE_URL}/hakis/fr/character/${id}/count`);
-        return res.data.count ?? res.data ?? 0;
-    } catch (e) {
-        return 0;
-    }
+    const char = characters.find((c) => c.id === id);
+
+    if (!char) return 0;
+
+    if (Array.isArray(char.haki)) return char.haki.length;
+    if (typeof char.haki === "number") return char.haki;
+    if (typeof char.haki === "boolean") return char.haki ? 1 : 0;
+
+    return 0;
 }
 
 export async function getArcs() {
-    try {
-        const res = await axios.get(`${API_BASE_URL}/arcs/fr`);
-        // On récupère l'ordre exact des arcs pour les flèches
-        return res.data.map(arc => arc.french_attribute?.name || arc.name);
-    } catch (e) {
-        return [];
-    }
-}
+    const arcs = [
+        ...new Set(
+            characters
+                .map((c) => c.first_arc || c.firstArc)
+                .filter(Boolean)
+        )
+    ];
 
-export function selectDailyChallenge(chars) {
-    if (!chars.length) return null;
-    const seed = new Date().getFullYear() * 10000 + (new Date().getMonth() + 1) * 100 + new Date().getDate();
-    const randomIndex = Math.floor((Math.abs(Math.sin(seed))) * chars.length);
-    return chars[randomIndex];
+    return arcs;
 }

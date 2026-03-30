@@ -1,67 +1,81 @@
-<template>
-  <div class="input-area-wrapper">
-    <div class="input-area">
-      <input
-          v-model="localGuess"
-          placeholder="Entrez le nom du personnage"
-          @keyup.enter="handleEnter"
-      />
-      <button @click="handleEnter" :disabled="!localGuess">
-        Vérifier
-      </button>
-    </div>
-
-    <ul v-if="suggestions.length > 0" class="autocomplete-list">
-      <li
-          v-for="char in suggestions"
-          :key="char.name"
-          @click="onSelect(char)"
-      >
-        {{ char.name }}
-      </li>
-    </ul>
-  </div>
-</template>
-
 <script setup>
-import { ref, watch } from 'vue';
-
-// Définition des propriétés reçues du parent
 const props = defineProps({
+  modelValue: {
+    type: String,
+    default: ''
+  },
   suggestions: {
     type: Array,
     default: () => []
   },
-  modelValue: String // Permet le v-model si tu le souhaites plus tard
+  disabled: {
+    type: Boolean,
+    default: false
+  }
 });
 
-// Définition des événements émis
-const emit = defineEmits(['submit', 'select', 'update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'submit', 'select']);
 
-const localGuess = ref('');
+function updateValue(event) {
+  emit('update:modelValue', event.target.value);
+}
 
-// Synchronise la saisie locale avec le parent pour la recherche
-watch(localGuess, (newVal) => {
-  emit('update:modelValue', newVal);
-});
-function handleEnter() {
-  // Si l'utilisateur a tapé quelque chose
-  if (localGuess.value.trim()) {
-    // S'il y a des suggestions affichées, on prend la première (automatique)
-    if (props.suggestions.length > 0) {
-      onSelect(props.suggestions[0]);
-    }
-    // Sinon, on tente de valider ce qui est écrit (si le nom est déjà complet)
-    else {
-      emit('submit', localGuess.value);
-      localGuess.value = '';
-    }
+function handleKeydown(event) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    emit('submit');
   }
 }
 
-// Gère la sélection dans la liste
-function onSelect(character) {
+function handleSubmit() {
+  emit('submit');
+}
+
+function handleSelect(character) {
   emit('select', character);
-  localGuess.value = ''; // Vide le champ après sélection
 }
 </script>
+
+<template>
+  <div class="guess-input-container">
+    <label class="guess-label">Choisis un personnage</label>
+
+    <div class="guess-input-box">
+      <div class="guess-input-row">
+        <input
+            :value="modelValue"
+            type="text"
+            class="guess-input"
+            placeholder="Tape au moins 2 lettres..."
+            :disabled="disabled"
+            @input="updateValue"
+            @keydown="handleKeydown"
+        />
+
+        <button
+            class="guess-submit-btn"
+            :disabled="disabled || !modelValue.trim()"
+            @click="handleSubmit"
+        >
+          Valider
+        </button>
+      </div>
+
+      <ul v-if="modelValue.length >= 2 && suggestions.length" class="suggestions-list">
+        <li
+            v-for="character in suggestions"
+            :key="character.id"
+            class="suggestion-item"
+            @click="handleSelect(character)"
+        >
+          <img
+              :src="character.image"
+              :alt="character.name"
+              class="suggestion-image"
+          />
+          <span>{{ character.name }}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</template>

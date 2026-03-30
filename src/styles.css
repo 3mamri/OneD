@@ -1,355 +1,396 @@
-body {
-    height: 100vh;
+:root {
+    --bg-overlay: rgba(7, 14, 28, 0.72);
+    --panel: rgba(10, 20, 38, 0.82);
+    --panel-border: rgba(255, 255, 255, 0.14);
+    --text-main: #f5f7fb;
+    --text-soft: #d2dbea;
+    --accent: #f4a261;
+    --success: #2a9d8f;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --neutral: #5b6b86;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+    min-height: 100%;
     margin: 0;
     padding: 0;
-    background-image: url('public/onepiece.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
 }
-.vert {
-    background-color: #6AA84F;
-    color: white;
-}
-.rouge {
-    background-color: #F44336;
-    color: white;
-}
-.jaune-up, .jaune-down {
-    background-color: #FFD966;
-    color: #333;
-}
-.grid-row > div {
-    padding: 8px;
-    border: 1px solid #ddd;
-    text-align: center;
-}
-.grid-row.header {
-    font-weight: bold;
-    background-color: #333;
-    color: white;
-}
-.grid-row {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-}
-.arrow {
-    margin-left: 5px;
-    font-weight: bold;
-}
-.daily-game {
-    background: #f7f7f7;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 900px;
-    margin: 20px auto;
+
+body {
     font-family: Arial, sans-serif;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: var(--text-main);
+    background:
+            linear-gradient(var(--bg-overlay), var(--bg-overlay)),
+            url('/onepiece.jpg') center / cover no-repeat fixed;
 }
-.input-area {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+
+/* PAGE */
+.daily-game {
+    width: min(1400px, calc(100% - 32px));
+    margin: 24px auto 40px;
+    padding: 24px;
+    border-radius: 20px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(6px);
 }
-.input-area input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px 0 0 5px;
-    flex-grow: 1;
-    max-width: 300px;
-}
-.input-area button {
-    padding: 10px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 0 5px 5px 0;
-    cursor: pointer;
-}
-.message-success {
-    color: #6AA84F;
-    font-weight: bold;
+
+.daily-game h2 {
     text-align: center;
+    margin: 0 0 16px;
+    color: #ffd166;
 }
-.message-failure {
-    color: #F44336;
-    font-weight: bold;
-    text-align: center;
-}
+
 .attempts-count {
     text-align: center;
-    font-size: 1.1em;
-    margin-bottom: 15px;
+    font-size: 1.05rem;
+    margin: 0 0 14px;
+    color: var(--text-soft);
 }
+
+.message {
+    text-align: center;
+    margin-bottom: 16px;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.message-success {
+    color: #9be7dc;
+    font-weight: 700;
+    text-align: center;
+}
+
+.message-failure {
+    color: #ff9b9b;
+    font-weight: 700;
+    text-align: center;
+}
+
 .loading-state {
     text-align: center;
-    padding: 50px;
-}
-
-.grid-row > div .arrow {
-    margin-left: 5px;
-    font-weight: bold;
-}
-.direction-arrow {
-    display: inline-block;
-}
-.direction-arrow .arrow {
-    font-size: 1.3em !important;
-    font-weight: 900 !important;
-    vertical-align: middle;
-}
-.jaune-up .direction-arrow .arrow,
-.jaune-down .direction-arrow .arrow {
-    color: #cc9900 !important;
-}
-
-.jaune-affiliation {
-    background-color: #FFD966;
-    color: #333;
-}
-
-
-
-.daily-game {
-}
-
-.vert { background-color: #6AA84F; color: white; border: 1px solid #486E37; }
-.rouge { background-color: #F44336; color: white; border: 1px solid #C4342A; }
-.jaune-up, .jaune-down, .jaune-affiliation {
-    background-color: #FFD966;
-    color: #333;
-    border: 1px solid #C7A74E;
-
-
-
-.grid-row {
-    display: grid;
-    grid-template-columns: 0.8fr repeat(7, 1fr);
-    gap: 2px;
-    margin-bottom: 2px;
-}
-
-
-.grid-row.header {
-    font-weight: bold;
-    background-color: #333;
+    padding: 60px 20px;
     color: white;
-    text-align: center;
-    border-radius: 4px 4px 0 0;
-}
-.grid-row.header > div {
-    padding: 10px 5px;/* Supprimer la bordure interne */
 }
 
-
-.grid-row > div {
-    padding: 8px 5px;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 50px;
-    font-weight: bold;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
+/* INPUT */
+.guess-input-container {
+    max-width: 760px;
+    margin: 0 auto 24px;
 }
 
-
-.character-image-cell {
-    padding: 0;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
+.guess-label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 700;
+    color: var(--text-soft);
 }
 
-.character-image {
-    width: 100%;
-    max-width: 60px;
-    height: auto;
-    border-radius: 4px;
-    object-fit: cover;
-}
-
-.clue-content {
-    font-size: 1.1em;
-}
-
-.direction-arrow .arrow {
-    font-size: 1.5em !important;
-    font-weight: 900 !important;
-}
-.jaune-up .direction-arrow .arrow,
-.jaune-down .direction-arrow .arrow {
-    color: #333 !important;
-}}
-.main-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centre horizontalement */
-    justify-content: center;
-    width: 100%;
-}
-/* Conteneur principal du tableau */
-.clues-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
-    align-items: center; /* Centre le tableau horizontalement */
-    width: 100%;
-}
-
-/* Style de chaque ligne (Header et Tentatives) */
-.grid-row {
-    display: grid;
-    /* On définit 8 colonnes de 85px de large chacune */
-    grid-template-columns: repeat(8, 85px);
-    gap: 8px;
-    align-items: center;
-}
-
-/* Style commun à toutes les cases (carrés) */
-.grid-row > div {
-    width: 85px;
-    height: 85px; /* On force le carré */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    border-radius: 5px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: white;
-    overflow: hidden; /* Empêche le texte de dépasser */
-    word-break: break-word;
-    padding: 2px;
-}
-
-/* Cellule spécifique pour l'image du personnage */
-.character-image-cell {
-    background-color: #f0f0f0;
-    color: #333 !important;
+.guess-input-box {
     position: relative;
 }
 
-.character-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* L'image remplit le carré sans se déformer */
+.guess-input-row {
+    display: flex;
+    gap: 12px;
 }
 
-/* Affichage du nom par-dessus l'image ou en dessous */
-.character-name-label {
-    position: absolute;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
+.guess-input {
+    width: 100%;
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08);
     color: white;
-    width: 100%;
-    font-size: 0.6rem;
-    padding: 2px 0;
+    padding: 14px 16px;
+    font-size: 1rem;
+    outline: none;
 }
 
-/* Couleurs des indices */
-.vert { background-color: #28a745; }
-.rouge { background-color: #dc3545; }
-.jaune-up, .jaune-down, .jaune-affiliation {
-    background-color: #ffc107;
-    color: #333 !important;
+.guess-input:focus {
+    border-color: rgba(244, 162, 97, 0.7);
+    box-shadow: 0 0 0 3px rgba(244, 162, 97, 0.15);
 }
 
-/* Style pour les en-têtes (texte noir, pas de fond coloré) */
-.grid-row.header > div {
-    height: auto;
-    background: transparent;
-    color: #333;
-    font-size: 0.7rem;
+.guess-input::placeholder {
+    color: #d2dbea;
 }
-/* Supprime le conteneur blanc et centre tout */
-.daily-game {
-    background: transparent; /* Supprime le fond blanc */
+
+.guess-submit-btn {
+    border: none;
+    border-radius: 14px;
+    padding: 0 18px;
+    font-weight: 700;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    min-width: 110px;
+    box-shadow: var(--shadow);
+}
+
+.guess-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* SUGGESTIONS */
+.suggestions-list {
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 8px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: rgba(8, 16, 30, 0.98);
+    border: 1px solid var(--panel-border);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    z-index: 50;
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.suggestion-item:hover,
+.suggestion-item.active {
+    background: rgba(244, 162, 97, 0.15);
+}
+
+.suggestion-image {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.12);
+}
+
+/* TABLE */
+.guess-table-wrapper {
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
+    gap: 14px;
+}
+
+.table-header,
+.table-row {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(120px, 1fr));
+    gap: 10px;
+}
+
+.table-header {
+    color: var(--text-soft);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+}
+
+.table-header > div {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    min-height: 42px;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    width: 100%;
-    min-height: 80vh;
+    padding: 8px;
+}
+
+/* FLIP */
+.flip-card {
+    opacity: 0;
+    transform: rotateX(-90deg);
+    transform-origin: center;
+    animation: flipIn 0.6s ease forwards;
+    perspective: 1000px;
+}
+
+/* TILES */
+.tile {
+    min-height: 110px;
+    border-radius: 14px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: 700;
+    word-break: break-word;
+}
+
+.tile-title {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.95;
+}
+
+.tile-value {
+    font-size: 0.9rem;
+    line-height: 1.3;
+}
+
+.tile.neutral {
+    background: linear-gradient(180deg, rgba(91, 107, 134, 0.95), rgba(62, 75, 96, 0.95));
+    color: white;
+}
+
+.tile.vert {
+    background: linear-gradient(180deg, rgba(42, 157, 143, 0.95), rgba(30, 109, 99, 0.95));
+    color: white;
+}
+
+.tile.rouge {
+    background: linear-gradient(180deg, rgba(214, 40, 40, 0.95), rgba(129, 24, 24, 0.95));
+    color: white;
+}
+
+.tile.jaune,
+.tile.jaune-up,
+.tile.jaune-down,
+.tile.jaune-affiliation {
+    background: linear-gradient(180deg, rgba(255, 193, 7, 0.95), rgba(211, 158, 11, 0.95));
+    color: #212529;
+}
+
+/* MODAL */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    display: grid;
+    place-items: center;
+    z-index: 300;
     padding: 20px;
 }
 
-/* Titres des colonnes (Personnage, Genre, etc.) */
-.grid-row.header {
-    margin-bottom: 5px;
-    background: transparent;
-}
-
-.grid-row.header > div {
-    background: rgba(0, 0, 0, 0.7); /* Fond noir transparent pour les titres */
-    color: white;
-    height: 35px; /* Moins haut que les cases de jeu */
-    font-size: 0.75rem;
-    border-radius: 4px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-/* Les rangées de tentatives */
-.grid-row {
-    display: grid;
-    /* On définit 8 colonnes de 90px */
-    grid-template-columns: repeat(8, 90px);
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-/* Les cases de jeu (Carrés) */
-.grid-row > div {
-    width: 90px;
-    height: 90px;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.victory-modal {
+    width: min(520px, 100%);
+    background: linear-gradient(180deg, rgba(14, 24, 42, 0.98), rgba(8, 15, 29, 0.98));
+    border: 1px solid var(--panel-border);
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: var(--shadow);
     text-align: center;
-    font-weight: bold;
-    font-size: 0.85rem;
+}
+
+.victory-modal h3 {
+    margin-top: 0;
+    color: #ffd166;
+}
+
+.emoji-share {
+    white-space: pre-wrap;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 16px;
+    border-radius: 16px;
+    font-size: 1.3rem;
+    margin: 18px 0;
     color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Petite ombre pour décoller du fond */
-    border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Image du personnage */
-.character-image-cell {
-    background: #fff;
-    padding: 0 !important;
-    position: relative;
-    border: 2px solid white !important;
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
 }
 
-.character-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 6px;
+.share-btn,
+.close-btn {
+    border: none;
+    border-radius: 14px;
+    padding: 12px 18px;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
 }
 
-.character-name-label {
-    position: absolute;
-    bottom: 0;
-    background: rgba(0,0,0,0.7);
-    width: 100%;
-    font-size: 0.65rem;
-    padding: 2px 0;
+.share-btn {
+    background: var(--accent);
 }
 
-/* Couleurs des indices */
-.vert { background-color: #28a745; }
-.rouge { background-color: #dc3545; }
-.jaune-up, .jaune-down, .jaune-affiliation {
-    background-color: #ffc107;
-    color: #212529 !important;
+.close-btn {
+    background: #457b9d;
+}
+
+/* ANIMATION */
+@keyframes flipIn {
+    from {
+        opacity: 0;
+        transform: rotateX(-90deg) translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: rotateX(0deg) translateY(0);
+    }
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+    .guess-table-wrapper {
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+
+    .table-header,
+    .table-row {
+        min-width: 1080px;
+    }
+}
+
+@media (max-width: 768px) {
+    .daily-game {
+        width: min(100% - 16px, 100%);
+        padding: 16px;
+        margin: 16px auto 24px;
+    }
+
+    .guess-input-row {
+        flex-direction: column;
+    }
+
+    .guess-submit-btn {
+        min-height: 46px;
+    }
+}
+.main-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #ffffff;
+    font-weight: 700;
+}
+.tile.correct {
+    background: #2a9d8f;
+    color: white;
+}
+
+.tile.partial {
+    background: #f4a261;
+    color: white;
+}
+
+.tile.wrong {
+    background: #d62828;
+    color: white;
 }
