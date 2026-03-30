@@ -15,8 +15,9 @@ export function searchCharacters(query, excludedIds = []) {
             const matches =
                 character.name.toLowerCase().includes(normalized) ||
                 (character.searchNames || []).some((name) =>
-                    name.toLowerCase().includes(normalized)
+                    String(name).toLowerCase().includes(normalized)
                 );
+
             return notExcluded && matches;
         })
         .slice(0, 8);
@@ -47,6 +48,7 @@ export async function getCharacterDetails(id) {
             first_arc: "Inconnu",
             affiliation: "Inconnu",
             bounty: 0,
+            height: 0,
             image: ""
         };
     }
@@ -55,13 +57,14 @@ export async function getCharacterDetails(id) {
         type: char.gender || char.type || "Inconnu",
         devil_fruit:
             char.devil_fruit ||
-            char.devilFruit?.name ||
+            char.devilFruit?.type ||
             char.fruitType ||
             "Aucun",
         origin: char.origin || "Inconnu",
         first_arc: char.first_arc || char.firstArc || "Inconnu",
         affiliation: char.affiliation || "Inconnu",
         bounty: char.bounty || 0,
+        height: char.height || char.size || char.taille || 0,
         image: char.image || ""
     };
 }

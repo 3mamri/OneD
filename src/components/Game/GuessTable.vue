@@ -17,92 +17,86 @@ function getStateClass(state) {
       <div>Personnage</div>
       <div>Genre</div>
       <div>Affiliation</div>
-      <div>Fruit du démon</div>
+      <div>Type Fruit</div>
       <div>Haki</div>
       <div>Prime</div>
+      <div>Taille</div>
       <div>Origine</div>
-      <div>Premier arc</div>
+      <div>Premier Arc</div>
     </div>
 
     <div
         v-for="(entry, rowIndex) in guesses"
         :key="`${entry.character.id}-${rowIndex}`"
-        class="table-row"
+        class="table-row table-row-9"
     >
-      <div
-          class="flip-card"
-          :style="{ animationDelay: `${rowIndex * 100 + 0}ms` }"
-      >
+      <div class="flip-card" :style="{ animationDelay: `${rowIndex * 100 + 0}ms` }">
         <div class="tile neutral">
           <span class="tile-title">Personnage</span>
           <span class="tile-value">{{ entry.character.name }}</span>
         </div>
       </div>
 
-      <div
-          class="flip-card"
-          :style="{ animationDelay: `${rowIndex * 100 + 100}ms` }"
-      >
+      <div class="flip-card" :style="{ animationDelay: `${rowIndex * 100 + 100}ms` }">
         <div :class="getStateClass(entry.clues.type)">
           <span class="tile-title">Genre</span>
           <span class="tile-value">{{ entry.display.type }}</span>
         </div>
       </div>
 
-      <div
-          class="flip-card"
-          :style="{ animationDelay: `${rowIndex * 100 + 200}ms` }"
-      >
+      <div class="flip-card" :style="{ animationDelay: `${rowIndex * 100 + 200}ms` }">
         <div :class="getStateClass(entry.clues.affiliation)">
           <span class="tile-title">Affiliation</span>
           <span class="tile-value">{{ entry.display.affiliation }}</span>
         </div>
       </div>
 
-      <div
-          class="flip-card"
-          :style="{ animationDelay: `${rowIndex * 100 + 300}ms` }"
-      >
+      <div class="flip-card" :style="{ animationDelay: `${rowIndex * 100 + 300}ms` }">
         <div :class="getStateClass(entry.clues.devil_fruit)">
           <span class="tile-title">Fruit</span>
           <span class="tile-value">{{ entry.display.devil_fruit }}</span>
         </div>
       </div>
 
-      <div
-          class="flip-card"
-          :style="{ animationDelay: `${rowIndex * 100 + 400}ms` }"
-      >
+      <div class="flip-card" :style="{ animationDelay: `${rowIndex * 100 + 400}ms` }">
         <div :class="getStateClass(entry.clues.haki)">
           <span class="tile-title">Haki</span>
           <span class="tile-value">{{ entry.display.haki }}</span>
         </div>
       </div>
 
-      <div
-          class="flip-card"
-          :style="{ animationDelay: `${rowIndex * 100 + 500}ms` }"
-      >
+      <div class="flip-card" :style="{ animationDelay: `${rowIndex * 100 + 500}ms` }">
         <div :class="getStateClass(entry.clues.bounty)">
           <span class="tile-title">Prime</span>
-          <span class="tile-value">{{ entry.display.bounty }}</span>
+          <span class="tile-value value-with-arrow">
+            <span>{{ entry.display.bounty }}</span>
+            <span v-if="entry.display.bountyArrow" class="value-arrow">
+              {{ entry.display.bountyArrow }}
+            </span>
+          </span>
         </div>
       </div>
 
-      <div
-          class="flip-card"
-          :style="{ animationDelay: `${rowIndex * 100 + 600}ms` }"
-      >
+      <div class="flip-card" :style="{ animationDelay: `${rowIndex * 100 + 600}ms` }">
+        <div :class="getStateClass(entry.clues.height)">
+          <span class="tile-title">Taille</span>
+          <span class="tile-value value-with-arrow">
+            <span>{{ entry.display.height }}</span>
+            <span v-if="entry.display.heightArrow" class="value-arrow">
+              {{ entry.display.heightArrow }}
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <div class="flip-card" :style="{ animationDelay: `${rowIndex * 100 + 700}ms` }">
         <div :class="getStateClass(entry.clues.origin)">
           <span class="tile-title">Origine</span>
           <span class="tile-value">{{ entry.display.origin }}</span>
         </div>
       </div>
 
-      <div
-          class="flip-card"
-          :style="{ animationDelay: `${rowIndex * 100 + 700}ms` }"
-      >
+      <div class="flip-card" :style="{ animationDelay: `${rowIndex * 100 + 800}ms` }">
         <div :class="getStateClass(entry.clues.first_arc)">
           <span class="tile-title">Premier arc</span>
           <span class="tile-value">{{ entry.display.first_arc }}</span>

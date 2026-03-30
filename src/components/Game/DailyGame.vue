@@ -70,7 +70,6 @@ import GuessInput from './GuessInput.vue';
 import GuessTable from './GuessTable.vue';
 import '../../styles.css';
 
-/* ---------------- STATE ---------------- */
 const selectedCharacter = ref(null);
 const dailyCharacter = ref(null);
 const charactersList = ref([]);
@@ -84,7 +83,6 @@ const isSubmitting = ref(false);
 const filteredCharacters = ref([]);
 const showVictoryModal = ref(false);
 
-/* ---------------- LIFECYCLE ---------------- */
 onMounted(async () => {
   try {
     const [chars, arcs] = await Promise.all([getCharacters(), getArcs()]);
@@ -116,7 +114,6 @@ onMounted(async () => {
   }
 });
 
-/* ---------------- WATCH ---------------- */
 watch(userGuess, (newGuess) => {
   const normalizedInput = (newGuess || '').trim().toLowerCase();
 
@@ -131,7 +128,6 @@ watch(userGuess, (newGuess) => {
   filterCharacters(newGuess);
 });
 
-/* ---------------- COMPUTED ---------------- */
 const emojiGrid = computed(() => {
   return guesses.value
       .map((guess) => {
@@ -141,6 +137,7 @@ const emojiGrid = computed(() => {
           guess.clues.devil_fruit,
           guess.clues.haki,
           guess.clues.bounty,
+          guess.clues.height,
           guess.clues.origin,
           guess.clues.first_arc
         ];
@@ -163,7 +160,6 @@ const emojiGrid = computed(() => {
       .join('\n');
 });
 
-/* ---------------- METHODS ---------------- */
 function filterCharacters(input) {
   if (!input || input.length < 2) {
     filteredCharacters.value = [];
@@ -201,61 +197,120 @@ function formatBounty(bounty) {
   return bounty.toLocaleString();
 }
 
+function normalizeFruitType(value) {
+  const fruit = String(value || '').toLowerCase();
+
+  if (
+      !fruit ||
+      fruit === 'aucun' ||
+      fruit === 'none' ||
+      fruit === 'inconnu'
+  ) {
+    return 'Aucun';
+  }
+
+  if (fruit.includes('paramecia')) return 'Paramecia';
+  if (fruit.includes('logia')) return 'Logia';
+  if (fruit.includes('zoan')) return 'Zoan';
+
+  return 'Aucun';
+}
+
+function formatHeight(height) {
+  if (!height) return '0 cm';
+  return `${height} cm`;
+}
+
+function toHeightNumber(value) {
+  if (typeof value === 'number') return value;
+  return Number(String(value || '').replace(/[^\d.]/g, '')) || 0;
+}
+
 function getClues(guessed, daily) {
   const clues = {};
   const display = {};
 
-  const exactProps = ['type', 'devil_fruit', 'haki', 'origin', 'first_arc'];
+  // Genre
+  clues.type = guessed.type === daily.type ? 'vert' : 'rouge';
+  display.type = guessed.type;
 
-  exactProps.forEach((prop) => {
-    clues[prop] = guessed[prop] === daily[prop] ? 'vert' : 'rouge';
+  // Fruit du démon : on affiche uniquement le TYPE
+  const guessedFruitType = normalizeFruitType(guessed.devil_fruit);
+  const dailyFruitType = normalizeFruitType(daily.devil_fruit);
 
-    if (prop === 'haki') {
-      display[prop] = guessed[prop] > 0 ? '✨'.repeat(guessed[prop]) : '❌';
-    } else if (prop === 'devil_fruit') {
-      display[prop] = guessed[prop] === 'Aucun' ? '❌' : guessed[prop];
-    } else if (prop === 'type') {
-      display[prop] = guessed[prop];
-    } else if (prop === 'first_arc') {
-      const gIndex = arcsOrder.value.indexOf(guessed.first_arc);
-      const dIndex = arcsOrder.value.indexOf(daily.first_arc);
+  if (guessed.name === daily.name) {
+    clues.devil_fruit = 'vert';
+  } else if (guessedFruitType === dailyFruitType) {
+    clues.devil_fruit = 'jaune';
+  } else {
+    clues.devil_fruit = 'rouge';
+  }
 
-      if (gIndex === dIndex && gIndex !== -1) {
-        display.first_arc = guessed.first_arc;
-      } else {
-        const arrow = gIndex > dIndex ? ' ↓' : ' ↑';
-        display.first_arc =
-            guessed.first_arc + (gIndex === -1 || dIndex === -1 ? '' : arrow);
-      }
-    } else {
-      display[prop] = guessed[prop];
-    }
-  });
+  display.devil_fruit = guessedFruitType;
 
+  // Haki
+  clues.haki = guessed.haki === daily.haki ? 'vert' : 'rouge';
+  display.haki = guessed.haki > 0 ? 'Oui' : 'Non';
+
+  // Origine
+  clues.origin = guessed.origin === daily.origin ? 'vert' : 'rouge';
+  display.origin = guessed.origin;
+
+  // Premier arc
+  clues.first_arc = guessed.first_arc === daily.first_arc ? 'vert' : 'rouge';
+
+  const gIndex = arcsOrder.value.indexOf(guessed.first_arc);
+  const dIndex = arcsOrder.value.indexOf(daily.first_arc);
+
+  if (gIndex === dIndex && gIndex !== -1) {
+    display.first_arc = guessed.first_arc;
+  } else {
+    const arrow = gIndex > dIndex ? ' ↓' : ' ↑';
+    display.first_arc =
+        guessed.first_arc + (gIndex === -1 || dIndex === -1 ? '' : arrow);
+  }
+
+  // Affiliation
   const gAff = (guessed.affiliation || '').toLowerCase();
   const dAff = (daily.affiliation || '').toLowerCase();
 
   if (gAff === dAff) {
     clues.affiliation = 'vert';
-    display.affiliation = guessed.affiliation;
   } else if (gAff.includes(dAff) || dAff.includes(gAff)) {
     clues.affiliation = 'jaune-affiliation';
-    display.affiliation = guessed.affiliation;
   } else {
     clues.affiliation = 'rouge';
-    display.affiliation = guessed.affiliation;
   }
 
+  display.affiliation = guessed.affiliation;
+
+  // Prime
   const gBounty = guessed.bounty || 0;
   const dBounty = daily.bounty || 0;
 
   if (gBounty === dBounty) {
     clues.bounty = 'vert';
+    display.bountyArrow = '';
   } else {
     clues.bounty = gBounty < dBounty ? 'jaune-up' : 'jaune-down';
+    display.bountyArrow = gBounty < dBounty ? '↑' : '↓';
   }
 
   display.bounty = formatBounty(gBounty);
+
+  // Taille
+  const gHeight = toHeightNumber(guessed.height);
+  const dHeight = toHeightNumber(daily.height);
+
+  if (gHeight === dHeight) {
+    clues.height = 'vert';
+    display.heightArrow = '';
+  } else {
+    clues.height = gHeight < dHeight ? 'jaune-up' : 'jaune-down';
+    display.heightArrow = gHeight < dHeight ? '↑' : '↓';
+  }
+
+  display.height = formatHeight(gHeight);
 
   return { clues, display };
 }
