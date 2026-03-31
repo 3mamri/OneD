@@ -1,15 +1,20 @@
-<h1 align="center"> # 🏴‍☠️ OnePiecedle - One Piece Guessing Game
+<h1 align="center"> 🏴‍☠️ OnePiecedle - One Piece Guessing Game </h1>
 
-<p align="center"> ![Projet Scolaire](https://img.shields.io/badge/PROJET-SCOLAIRE%20ACADÉMIQUE-blueviolet?style=for-the-badge&logo=googlescholar) </p>
+<p align="center">
+  ![BTS SIO SLAM](https://img.shields.io/badge/FORMATION-BTS%20SIO%20SLAM-blue?style=for-the-badge)
+  ![Vue.js](https://img.shields.io/badge/Vue.js-3.x-4fc08d?style=for-the-badge&logo=vue.js)
+  ![Vite](https://img.shields.io/badge/Vite-Latest-646cff?style=for-the-badge&logo=vite)
+</p>
 
-<h3 align="center"> Un jeu web interactif inspiré de **(https://onepiecedle.net/)**, basé sur l'univers de **One Piece**. Devinez le personnage mystère chaque jour !</h3>
+<h3 align="center"> Un jeu web interactif inspiré de <a href="https://onepiecedle.net/">OnePiecedle</a>, basé sur l'univers de <strong>One Piece</strong>.</h3>
 
 ---
-<p align="center">
-## 🚀 Démo en ligne
-Retrouvez la version déployée de OneD ici :
-<h3>👉 https://oned-fgr4.onrender.com</h3>
 
+## 🚀 Démo en ligne
+Retrouvez la version déployée du projet ici :
+### 👉 [https://oned-fgr4.onrender.com](https://oned-fgr4.onrender.com)
+
+---
 ## 🧠 Concept & Gameplay
 
 À chaque proposition, le jeu compare les attributs du personnage choisi avec ceux du personnage du jour :
