@@ -17,10 +17,9 @@
   ⚡ <strong>Stack :</strong> Vue.js 3 / Vite<br>
   🎨 <strong>Frontend :</strong> CSS3 (Animations Flashy) / JavaScript (ES6+)
 </p>
----
 
 ## 🚀 Démo en ligne
-Retrouvez la version déployée du projet ici : <h3> 👉 [https://oned-fgr4.onrender.com](https://oned-fgr4.onrender.com)</h3>
+<h3> Retrouvez la version déployée du projet ici : 👉 [https://oned-fgr4.onrender.com](https://oned-fgr4.onrender.com)</h3>
 
 ---
 ## 🧠 Concept & Gameplay
