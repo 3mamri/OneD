@@ -3,7 +3,6 @@
 <p align="center">
 <img src="https://img.shields.io/badge/FORMATION-BTS%20SIO%20SLAM-blue?style=for-the-badge" alt="BTS SIO SLAM"> 
   <img src="https://img.shields.io/badge/Statut-Projet%20Étudiant-blue?style=for-the-badge" />
-<img src="https://img.shields.io/badge/Vue.js-3.x-4fc08d?style=for-the-badge&logo=vue.js" alt="Vue.js"> <img src="https://img.shields.io/badge/Vite" alt="Vite">
 </p>
 
 <h3 align="center"> Un jeu web interactif inspiré de <a href="https://onepiecedle.net/">OnePiecedle</a>, basé sur l'univers de <strong>One Piece</strong>.</h3>
