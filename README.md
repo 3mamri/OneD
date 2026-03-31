@@ -19,7 +19,7 @@
 </p>
 
 ## 🚀 Démo en ligne
-<h3> Retrouvez la version déployée du projet ici : 👉 [https://oned-fgr4.onrender.com](https://oned-fgr4.onrender.com)</h3>
+Retrouvez la version déployée du projet ici : 👉 [https://oned-fgr4.onrender.com](https://oned-fgr4.onrender.com)
 
 ---
 ## 🧠 Concept & Gameplay
