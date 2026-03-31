@@ -8,7 +8,6 @@ Un jeu web interactif inspiré de **(https://onepiecedle.net/)**, basé sur l'un
 ## 🚀 Démo en ligne
 Retrouvez la version déployée de OneD ici :
 <h3>👉 https://oned-fgr4.onrender.com</h3>
----
 
 ## 🧠 Concept & Gameplay
 
