@@ -1,10 +1,11 @@
-# 🏴‍☠️ OnePiecedle - One Piece Guessing Game
+<h1 align="center"> # 🏴‍☠️ OnePiecedle - One Piece Guessing Game
 
-![Projet Scolaire](https://img.shields.io/badge/PROJET-SCOLAIRE%20ACADÉMIQUE-blueviolet?style=for-the-badge&logo=googlescholar)
+<p align="center"> ![Projet Scolaire](https://img.shields.io/badge/PROJET-SCOLAIRE%20ACADÉMIQUE-blueviolet?style=for-the-badge&logo=googlescholar) </p>
 
-Un jeu web interactif inspiré de **(https://onepiecedle.net/)**, basé sur l'univers de **One Piece**. Devinez le personnage mystère chaque jour !
+<h3 align="center"> Un jeu web interactif inspiré de **(https://onepiecedle.net/)**, basé sur l'univers de **One Piece**. Devinez le personnage mystère chaque jour !</h3>
 
 ---
+<p align="center">
 ## 🚀 Démo en ligne
 Retrouvez la version déployée de OneD ici :
 <h3>👉 https://oned-fgr4.onrender.com</h3>
