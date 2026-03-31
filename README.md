@@ -2,7 +2,7 @@
 
 ![Projet Scolaire](https://img.shields.io/badge/PROJET-SCOLAIRE%20ACADÉMIQUE-blueviolet?style=for-the-badge&logo=googlescholar)
 
-Un jeu web interactif inspiré de **Wordle**, basé sur l'univers de **One Piece**. Devinez le personnage mystère chaque jour !
+Un jeu web interactif inspiré de **(https://onepiecedle.net/)**, basé sur l'univers de **One Piece**. Devinez le personnage mystère chaque jour !
 
 ---
 
