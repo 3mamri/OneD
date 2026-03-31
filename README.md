@@ -36,6 +36,8 @@ src/
 └── main.js                  # Initialisation
 ```
 ## 🔧 Installation & Lancement
+```text
+
 Bash
 # Cloner le dépôt
 git clone [https://github.com/3mamri/OneD.git](https://github.com/3mamri/OneD.git)
