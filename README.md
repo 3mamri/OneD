@@ -1,8 +1,7 @@
 # 🏴‍☠️ OnePiecedle - One Piece Guessing Game
 
 ![Projet Scolaire](https://img.shields.io/badge/PROJET-SCOLAIRE%20ACADÉMIQUE-blueviolet?style=for-the-badge&logo=googlescholar)
-![Vue.js](https://img.shields.io/badge/Vue.js-3.x-4fc08d?style=for-the-badge&logo=vue.js)
-![Vite](https://img.shields.io/badge/Vite-Latest-646cff?style=for-the-badge&logo=vite)
+![Vue.js](https://img.shields.io/badge/Vue.js)
 
 Un jeu web interactif inspiré de **Wordle**, basé sur l'univers de **One Piece**. Devinez le personnage mystère chaque jour !
 
