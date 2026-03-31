@@ -1,12 +1,21 @@
-<h1 align="center"> 🏴‍☠️ OnePiecedle - One Piece Guessing Game </h1>
+<h1 align="center"> 🏴‍☠️ OnePiecedle </h1>
 
 <p align="center">
+  <strong>Jeu de Devinettes One Piece • Quotidien</strong>
+</p>
 <img src="https://img.shields.io/badge/FORMATION-BTS%20SIO%20SLAM-blue?style=for-the-badge" alt="BTS SIO SLAM"> 
   <img src="https://img.shields.io/badge/Statut-Projet%20Étudiant-blue?style=for-the-badge" />
 </p>
 
 <h3 align="center"> Un jeu web interactif inspiré de <a href="https://onepiecedle.net/">OnePiecedle</a>, basé sur l'univers de <strong>One Piece</strong>.</h3>
+<p align="center">
+  OneD est une application web interactive inspirée du concept Onepiecedle, permettant aux fans de tester leurs connaissances sur l'univers de One Piece à travers un défi quotidien dynamique.
+</p>
 
+<p align="center">
+  ⚡ <strong>Stack :</strong> Vue.js 3 / Vite<br>
+  🎨 <strong>Frontend :</strong> CSS3 (Animations Flashy) / JavaScript (ES6+)
+</p>
 ---
 
 ## 🚀 Démo en ligne
