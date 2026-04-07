@@ -65,7 +65,6 @@ npm install
 # Lancer en mode développement
 npm run dev
 ```
-👨‍💻 Auteur
 🔗 GitHub : 3mamri
 
 🏁 Licence
